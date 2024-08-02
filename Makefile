@@ -5,21 +5,24 @@ OBJCOPY  		= llvm-objcopy$(CLANG_VERSION)
 
 QEMU = qemu-system-riscv64
 
+DTB_FILE = ./disk/jh7110-starfive-visionfive-2-v1.3b.dtb
+
 CFLAGS = -march=rv64gc \
 		 --target=riscv64-unknown-none-elf \
 		 -mcmodel=medany \
-		 -nostdlib
+		 -nostdlib \
+		 -Wall -Wextra
 
 QEMUFLAGS = -M virt \
 			-display none \
 			-serial stdio \
 			-smp cpus=4
-			# -dtb ./disk/jh7110-starfive-visionfive-2-v1.3b.dtb
+			# -dtb $(DTB_FILE)
 
 .PHONY: all clean build qemu
-all: qemu
+all: build qemu
 
-build: kernel.img
+build: kernel.img kernel.fit
 
 clean:
 	$(RM) kernel.img kernel.elf start.o main.o
@@ -36,5 +39,8 @@ start.o: start.S
 main.o: main.c
 	$(CC) -MMD -MP $(CFLAGS) -c $< -o $@
 
-qemu: build
+kernel.fit: visionfive2-fit-image.its kernel.img $(DTB_FILE)
+	mkimage -f visionfive2-fit-image.its -A riscv -O linux -T flat_dt $@
+
+qemu:
 	$(QEMU) $(QEMUFLAGS) $(QEMU_EXT_FLAGS) -kernel kernel.img

@@ -23,6 +23,8 @@ SECTIONS
         *(COMMON)
     }
 
+    _end = .;
+
     /DISCARD/ : {
         *(.comment)
         *(.gnu*) *(.note*) *(.eh_frame*)
