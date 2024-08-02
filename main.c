@@ -60,6 +60,24 @@ void puts(const char *s) {
     putchar(*s++);
 }
 
+int readline(char *buffer, int length) {
+  int r = 0;
+  while (r < length) {
+    char c = getchar();
+    putchar(c);
+    if (c == '\n') {
+      buffer[r++] = 0;
+      break;
+    }
+    buffer[r++] = c;
+  }
+  return r;
+}
+
+void reset() {
+  // TODO
+}
+
 void kernel_main() {
   // FIXME
   const int cnt = 10;
@@ -70,9 +88,32 @@ void kernel_main() {
       UART_UNIT_SIZE = 4;
   }
 
-  char s[] = "Hello world!\n\0";
-  puts(s);
+  puts("Hello Kernel!\n");
+
+#define BUF_SIZE 1024
+  char buf[BUF_SIZE];
+
   for (;;) {
-    putchar(getchar());
+    puts("$ ");
+    int len = readline(buf, BUF_SIZE);
+    if (len <= 0)
+      continue;
+    switch (buf[0]) {
+    case 'h':
+      switch (buf[3]) {
+      case 'p':
+        puts("help\t: print this help menu\n");
+        puts("hello\t: print Hello World!\n");
+        puts("reboot\t: reboot the device\n");
+        break;
+      case 'l':
+        puts("Hello World!\n");
+        break;
+      }
+      break;
+    case 'r':
+      reset();
+      break;
+    }
   }
 }
