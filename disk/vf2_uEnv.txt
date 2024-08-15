@@ -1,6 +1,6 @@
-kernel_file = kernel.img
-kernel_addr = 0x80200000
-dtb_file    = jh7110-starfive-visionfive-2-v1.3b.dtb
-dtb_addr    = 0x80600000
+fitfile=kernel.fit
 
-boot2=fatload ${bootdev} ${devnum}:${bootpart} ${kernel_addr} ${kernel_file}; fatload ${bootdev} ${devnum}:${bootpart} ${dtb_addr} ${dtb_file}; bootm ${kernel_addr} - ${dtb_addr}
+# Use the FDT in the FIT image..
+setupfdt1=fdt addr ${fdtaddr}; fdt resize;
+
+boot2=fatload ${bootdev} ${devnum}:${bootpart} ${loadaddr} ${fitfile}; bootm start ${loadaddr}; run setupfdt1; echo "Booting kernel in"; bootm ${loadaddr}
