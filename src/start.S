@@ -1,5 +1,3 @@
-#include "image.h"
-
 .global _start
 _start:
     j   boot_cpu

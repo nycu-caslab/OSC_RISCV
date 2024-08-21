@@ -17,7 +17,8 @@
                 };
 
                 fdt {
-                        data = /incbin/("./disk/jh7110-starfive-visionfive-2-v1.3b.dtb");
+                        description = "fdt";
+                        data = /incbin/("./jh7110-starfive-visionfive-2-v1.3b.dtb");
                         type = "flat_dt";
                         arch = "riscv";
                         load = <0x0 0x46000000>;

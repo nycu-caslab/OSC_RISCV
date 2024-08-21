@@ -2,45 +2,41 @@ CLANG_VERSION  	?=
 CC 				= clang$(CLANG_VERSION)
 LD 				= $(CC) -fuse-ld=lld
 OBJCOPY  		= llvm-objcopy$(CLANG_VERSION)
+QEMU 			= qemu-system-riscv64
 
-QEMU = qemu-system-riscv64
 
-DTB_FILE = ./disk/jh7110-starfive-visionfive-2-v1.3b.dtb
+CFLAGS 		= -march=rv64gc \
+		  	  --target=riscv64-unknown-none-elf \
+		  	  -mcmodel=medany \
+		  	  -nostdlib \
+		  	  -Wall -Wextra
 
-CFLAGS = -march=rv64gc \
-		 --target=riscv64-unknown-none-elf \
-		 -mcmodel=medany \
-		 -nostdlib \
-		 -Wall -Wextra
-
-QEMUFLAGS = -M virt \
-			-display none \
-			-serial stdio \
-			-smp cpus=4
-			# -dtb $(DTB_FILE)
+QEMUFLAGS  	= -M virt \
+			  -display none \
+			  -serial stdio \
+			  -smp cpus=4
 
 .PHONY: all clean build qemu
 all: build qemu
 
-build: kernel.img kernel.fit
+build: disk/kernel.img
 
 clean:
-	$(RM) kernel.img kernel.elf start.o main.o
+	$(RM) -r disk/kernel.img build
 
-kernel.img: kernel.elf
+disk/kernel.img: build/kernel.elf
 	$(OBJCOPY) -O binary $< $@
 
-kernel.elf: linker.ld start.o main.o
-	$(LD) -T linker.ld $(CFLAGS) start.o main.o -o $@
+build/kernel.elf: src/linker.ld build/start.o build/main.o
+	$(LD) -T src/linker.ld $(CFLAGS) build/start.o build/main.o -o $@
 
-start.o: start.S
+build/start.o: src/start.S
+	@mkdir -p $(@D)
 	$(CC) -MMD -MP $(CFLAGS) -c $< -o $@
 
-main.o: main.c
+build/main.o: src/main.c
+	@mkdir -p $(@D)
 	$(CC) -MMD -MP $(CFLAGS) -c $< -o $@
-
-kernel.fit: visionfive2-fit-image.its kernel.img $(DTB_FILE)
-	mkimage -f visionfive2-fit-image.its -A riscv -O linux -T flat_dt $@
 
 qemu:
-	$(QEMU) $(QEMUFLAGS) $(QEMU_EXT_FLAGS) -kernel kernel.img
+	$(QEMU) $(QEMUFLAGS) $(QEMU_EXT_FLAGS) -kernel disk/kernel.img
