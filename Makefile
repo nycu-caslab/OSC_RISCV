@@ -1,42 +1,34 @@
-CLANG_VERSION  	?=
-CC 				= clang$(CLANG_VERSION)
-LD 				= $(CC) -fuse-ld=lld
-OBJCOPY  		= llvm-objcopy$(CLANG_VERSION)
-QEMU 			= qemu-system-riscv64
+QEMU 		:= qemu-system-riscv64
+MINICOM 	:= minicom
+SERIAL 		:= /dev/cu.usbserial-0001
 
+OUTPUT_DIR 	:= $(PWD)/build
+export OUTPUT_DIR
+SRC_DIR  	:= $(PWD)/src
+DISK_DIR 	:= $(PWD)/disk
 
-CFLAGS 		= -march=rv64gc \
-		  	  --target=riscv64-unknown-none-elf \
-		  	  -mcmodel=medany \
-		  	  -nostdlib \
-		  	  -Wall -Wextra
+KERNEL_BIN 	:= $(DISK_DIR)/kernel.img
 
-QEMUFLAGS  	= -M virt \
-			  -display none \
-			  -serial stdio \
-			  -smp cpus=4
+QEMUFLAGS  	:=
+QEMUFLAGS 	+= -M virt
+QEMUFLAGS 	+= -display none
+QEMUFLAGS 	+= -serial stdio
+QEMUFLAGS 	+= -smp cpus=4
 
-.PHONY: all clean build qemu
+.PHONY: all clean build qemu uart
 all: build qemu
 
-build: disk/kernel.img
+build: $(KERNEL_BIN)
+
+$(KERNEL_BIN):
+	${MAKE} -C $(SRC_DIR) TARGET_BIN=$(KERNEL_BIN)
 
 clean:
-	$(RM) -r disk/kernel.img build
+	${MAKE} -C $(SRC_DIR) TARGET_BIN=$(KERNEL_BIN) clean
+	$(RM) $(KERNEL_BIN)
 
-disk/kernel.img: build/kernel.elf
-	$(OBJCOPY) -O binary $< $@
+qemu: $(KERNEL_BIN)
+	$(QEMU) $(QEMUFLAGS) $(QEMU_EXT_FLAGS) -kernel $(KERNEL_BIN)
 
-build/kernel.elf: src/linker.ld build/start.o build/main.o
-	$(LD) -T src/linker.ld $(CFLAGS) build/start.o build/main.o -o $@
-
-build/start.o: src/start.S
-	@mkdir -p $(@D)
-	$(CC) -MMD -MP $(CFLAGS) -c $< -o $@
-
-build/main.o: src/main.c
-	@mkdir -p $(@D)
-	$(CC) -MMD -MP $(CFLAGS) -c $< -o $@
-
-qemu:
-	$(QEMU) $(QEMUFLAGS) $(QEMU_EXT_FLAGS) -kernel disk/kernel.img
+uart:
+	$(MINICOM) -D $(SERIAL)

@@ -1,3 +1,5 @@
+.section ".text._start"
+
 .global _start
 _start:
     j   boot_cpu
