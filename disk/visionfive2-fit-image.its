@@ -5,9 +5,9 @@
         #address-cells = <2>;
 
         images {
-                kernel {
-                        description = "kernel";
-                        data = /incbin/("./kernel.img");
+                bootloader {
+                        description = "bootloader";
+                        data = /incbin/("./bootloader.img");
                         type = "kernel";
                         arch = "riscv";
                         os = "linux";
@@ -34,9 +34,9 @@
 
                 config-1 {
                         description = "visionfive2 with opensbi";
-                        kernel = "kernel";
+                        kernel = "bootloader";
                         fdt = "fdt";
-                        loadables = "kernel";
+                        loadables = "bootloader";
                 };
         };
 };

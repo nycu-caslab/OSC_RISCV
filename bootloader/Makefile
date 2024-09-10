@@ -9,19 +9,16 @@ CFLAGS 	+= -mcmodel=medany
 CFLAGS 	+= -nostdlib
 CFLAGS 	+= -Wall
 CFLAGS 	+= -Wextra
+CFLAGS 	+= -g
+CFLAGS  += -mno-unaligned-access
 
 LDFLAGS :=
 LDFLAGS += --Bstatic
 LDFLAGS += --discard-locals
 
-ifeq ("$(origin O)", "command line")
-OUTPUT_DIR 	:= $(O)
-endif
-ifndef OUTPUT_DIR
 OUTPUT_DIR 	:= $(shell pwd)/build
-endif
 
-TARGET 		?= kernel
+TARGET 		?= bootloader
 TARGET_ELF 	?= $(OUTPUT_DIR)/$(TARGET).elf
 TARGET_BIN 	?= $(OUTPUT_DIR)/$(TARGET).bin
 
