@@ -16,6 +16,19 @@
                         compression = "none";
                 };
 
+                ramdisk {
+                        description = "initramfs";
+                        data = /incbin/("./initramfs.cpio");
+                        type = "ramdisk";
+                        arch = "riscv";
+                        os = "linux";
+                        load = <0x0 0x46100000>;
+                        compression = "none";
+                        hash-1 {
+                                algo = "sha256";
+                        };
+                };
+
                 fdt {
                         description = "fdt";
                         data = /incbin/("./jh7110-starfive-visionfive-2-v1.3b.dtb");
@@ -36,7 +49,7 @@
                         description = "visionfive2 with opensbi";
                         kernel = "bootloader";
                         fdt = "fdt";
-                        loadables = "bootloader";
+                        loadables = "ramdisk";
                 };
         };
 };

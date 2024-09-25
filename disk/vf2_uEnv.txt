@@ -3,4 +3,7 @@ fitfile=kernel.fit
 # Use the FDT in the FIT image..
 setupfdt1=fdt addr ${fdtaddr}; fdt resize;
 
-boot2=fatload ${bootdev} ${devnum}:${bootpart} ${loadaddr} ${fitfile}; bootm start ${loadaddr}; run setupfdt1; echo "Booting kernel in"; bootm ${loadaddr}
+# TODO: irdsize ?
+setupird=setexpr irdend ${ramdisk_addr_r} + ${filesize}; fdt set /chosen linux,initrd-start <0x0 ${ramdisk_addr_r}>; fdt set /chosen linux,initrd-end <0x0 0x${irdend}>
+
+boot2=fatload ${bootdev} ${devnum}:${bootpart} ${loadaddr} ${fitfile}; bootm ${loadaddr}

@@ -1,5 +1,5 @@
 DISKNAME 	= NO NAME
-DISKPATH 	= /Volumes/$(DISKNAME)
+DISKPATH 	= /Volumes/$(DISKNAME)/
 
 BASEURL 	= https://github.com/starfive-tech/VisionFive2/releases/download
 PACKAGE 	= JH7110_VF2_6.6_v5.12.0.tar.bz2
