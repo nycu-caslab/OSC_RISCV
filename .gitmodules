@@ -1,0 +1,3 @@
+[submodule "kernel/include/nanoprintf"]
+	path = kernel/include/nanoprintf
+	url = https://github.com/charlesnicholson/nanoprintf

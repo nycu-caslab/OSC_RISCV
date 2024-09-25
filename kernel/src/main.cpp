@@ -6,26 +6,27 @@
 
 void kernel_main() {
   uart_init();
-  puts("Hello Kernel!\n");
+  kprintf("Hello Kernel!\n");
+  kprintf("kernel_main @ %p\n", kernel_main);
 
 #define BUF_SIZE 1024
   char buf[BUF_SIZE];
 
   for (;;) {
-    puts("$ ");
-    int len = readline(buf, BUF_SIZE);
+    kputs("$ ");
+    int len = kreadline(buf, BUF_SIZE);
     if (len <= 0)
       continue;
     switch (buf[0]) {
       case 'h':
         switch (buf[3]) {
           case 'p':
-            puts("help\t: print this help menu\n");
-            puts("hello\t: print Hello World!\n");
-            puts("reboot\t: reboot the device\n");
+            kputs("help\t: print this help menu\n");
+            kputs("hello\t: print Hello World!\n");
+            kputs("reboot\t: reboot the device\n");
             break;
           case 'l':
-            puts("Hello World!\n");
+            kputs("Hello World!\n");
             break;
         }
         break;

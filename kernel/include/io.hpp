@@ -1,6 +1,12 @@
 #pragma once
+#include <cstdarg>
 
-int putchar(int c);
-int getchar();
-void puts(const char* s);
-int readline(char* buffer, int length);
+#include "util.hpp"
+
+int kputchar(int c);
+int kgetchar();
+void kputs(const char* s);
+int kreadline(char* buffer, int length);
+
+int PRINTF_FORMAT(1, 0) kvprintf(const char* format, va_list args);
+int PRINTF_FORMAT(1, 2) kprintf(const char* format, ...);

@@ -1,29 +1,30 @@
 #include "io.hpp"
 
+#include "nanoprintf.hpp"
 #include "uart.hpp"
 
-int putchar(int c) {
+int kputchar(int c) {
   if (c == '\n')
     uart_write('\r');
   uart_write(c);
   return 1;
 }
 
-int getchar() {
+int kgetchar() {
   char c = uart_read();
   return c == '\r' ? '\n' : c;
 }
 
-void puts(const char* s) {
+void kputs(const char* s) {
   while (*s != 0)
-    putchar(*s++);
+    kputchar(*s++);
 }
 
-int readline(char* buffer, int length) {
+int kreadline(char* buffer, int length) {
   int r = 0;
   while (r < length) {
-    char c = getchar();
-    putchar(c);
+    char c = kgetchar();
+    kputchar(c);
     if (c == '\n') {
       buffer[r++] = 0;
       break;
@@ -31,4 +32,20 @@ int readline(char* buffer, int length) {
     buffer[r++] = c;
   }
   return r;
+}
+
+void k_npf_putc(int c, void* /* ctx */) {
+  kputchar(c);
+}
+
+int kvprintf(const char* format, va_list args) {
+  return npf_vpprintf(&k_npf_putc, NULL, format, args);
+}
+
+int kprintf(const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  int size = kvprintf(format, args);
+  va_end(args);
+  return size;
 }
