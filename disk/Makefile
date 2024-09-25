@@ -1,4 +1,4 @@
-DISKNAME 	= RPI-BOOT
+DISKNAME 	= NO NAME
 DISKPATH 	= /Volumes/$(DISKNAME)
 
 BASEURL 	= https://github.com/starfive-tech/VisionFive2/releases/download
@@ -30,4 +30,4 @@ $(FIT_FILE): $(ITS_FILE) $(BOOTLOADER) $(DTB_FILE)
 
 
 upload: $(UBOOT_CONF) $(FIT_FILE)
-	cp $? $(DISKPATH)
+	cp $? "$(DISKPATH)"
