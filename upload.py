@@ -17,7 +17,7 @@ with open(SERIAL, "wb", buffering=0) as tty:
 
     tty.write(b"a")
     time.sleep(0.5)
-    tty.write(struct.pack("<Q", 0x80400000))
+    tty.write(struct.pack("<Q", 0x80200000))
     time.sleep(0.5)
 
     tty.write(b"p")

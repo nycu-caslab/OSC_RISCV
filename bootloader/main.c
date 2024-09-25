@@ -232,6 +232,7 @@ void bootloader_main(int bootcore, void *dtb) {
       hexdump((void *)kernel_address, size, 0);
       break;
     case 'j':
+      asm volatile("fence.i\t\n");
       ((typeof(&bootloader_main))(kernel_address))(bootcore, dtb);
       break;
     case 'r':
