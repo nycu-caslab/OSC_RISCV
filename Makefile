@@ -51,4 +51,7 @@ qemu-bootloader: $(BOOTLOADER)
 uart:
 	$(MINICOM) -D $(SERIAL)
 
+upload:
+	./upload.py $(SERIAL)
+
 FORCE:
