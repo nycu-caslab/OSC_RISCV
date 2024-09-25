@@ -27,7 +27,10 @@ TARGET_ELF 	?= $(OUTPUT_DIR)/$(TARGET).elf
 TARGET_BIN 	?= $(OUTPUT_DIR)/$(TARGET).bin
 
 SRC_DIR 	= src
+INCLUDE_DIR = include
 LINKER 		:= $(SRC_DIR)/linker.ld
+
+CXXFLAGS 	+= -I$(INCLUDE_DIR)
 
 SRCS := $(shell find $(SRC_DIR) -name '*.cpp')
 ASMS := $(shell find $(SRC_DIR) -name '*.S')
