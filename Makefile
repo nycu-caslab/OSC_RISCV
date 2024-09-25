@@ -2,7 +2,7 @@ QEMU 		:= qemu-system-riscv64
 MINICOM 	:= minicom
 SERIAL 		:= /dev/cu.usbserial-0001
 
-KERNEL_SRC  := $(PWD)/src
+KERNEL_SRC  := $(PWD)/kernel
 BOOT_SRC  	:= $(PWD)/bootloader
 DISK_DIR 	:= $(PWD)/disk
 FS_DIR 		:= $(PWD)/rootfs

@@ -119,7 +119,7 @@ void reset() {
   }
 }
 
-void kernel_main() {
+extern "C" void kernel_main() {
   // FIXME
   const int cnt = 10;
   for (int i = 0; i <= cnt; i++) {

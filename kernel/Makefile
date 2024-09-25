@@ -1,14 +1,15 @@
-CC 			:= clang$(LLVM_SUFFIX)
+CXX 		:= clang++$(LLVM_SUFFIX)
 LD 			:= ld.lld$(LLVM_SUFFIX)
 OBJCOPY 	:= llvm-objcopy$(LLVM_SUFFIX)
 
-CFLAGS 	:= 
-CFLAGS 	+= -march=rv64gc
-CFLAGS 	+= --target=riscv64-unknown-none-elf
-CFLAGS 	+= -mcmodel=medany
-CFLAGS 	+= -nostdlib
-CFLAGS 	+= -Wall
-CFLAGS 	+= -Wextra
+CXXFLAGS 	:= 
+CXXFLAGS 	+= -march=rv64gc
+CXXFLAGS 	+= --target=riscv64-unknown-none-elf
+CXXFLAGS 	+= -mcmodel=medany
+CXXFLAGS 	+= -nostdlib
+CXXFLAGS 	+= -Wall
+CXXFLAGS 	+= -Wextra
+CXXFLAGS 	+= -fno-exceptions -fno-c++-static-destructors -fno-rtti
 
 LDFLAGS :=
 LDFLAGS += --Bstatic
@@ -25,13 +26,13 @@ TARGET 		?= kernel
 TARGET_ELF 	?= $(OUTPUT_DIR)/$(TARGET).elf
 TARGET_BIN 	?= $(OUTPUT_DIR)/$(TARGET).bin
 
-SRC_DIR 	= .
+SRC_DIR 	= src
 LINKER 		:= $(SRC_DIR)/linker.ld
 
-SRCS := $(shell find $(SRC_DIR) -name '*.c')
+SRCS := $(shell find $(SRC_DIR) -name '*.cpp')
 ASMS := $(shell find $(SRC_DIR) -name '*.S')
 OBJS :=
-OBJS += $(patsubst $(SRC_DIR)/%.c,$(OUTPUT_DIR)/%.o,$(SRCS))
+OBJS += $(patsubst $(SRC_DIR)/%.cpp,$(OUTPUT_DIR)/%.o,$(SRCS))
 OBJS += $(patsubst $(SRC_DIR)/%.S,$(OUTPUT_DIR)/%-asm.o,$(ASMS))
 DEPS := $(OBJS:%.o=%.d)
 
@@ -50,11 +51,11 @@ $(TARGET_BIN): $(TARGET_ELF)
 
 $(OUTPUT_DIR)/%-asm.o: $(SRC_DIR)/%.S
 	@mkdir -p $(@D)
-	$(CC) -MMD -MP $(CFLAGS) -c $< -o $@
+	$(CXX) -MMD -MP $(CXXFLAGS) -c $< -o $@
 
-$(OUTPUT_DIR)/%.o: $(SRC_DIR)/%.c
+$(OUTPUT_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(@D)
-	$(CC) -MMD -MP $(CFLAGS) -c $< -o $@
+	$(CXX) -MMD -MP $(CXXFLAGS) -c $< -o $@
 
 clean:
 	$(RM) $(TARGET_BIN) $(TARGET_ELF) $(OBJS) $(DEPS)
