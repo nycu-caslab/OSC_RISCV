@@ -22,11 +22,11 @@ all: build qemu
 build: kernel
 
 kernel: $(KERNEL_BIN)
-$(KERNEL_BIN):
+$(KERNEL_BIN): FORCE
 	${MAKE} -C $(KERNEL_SRC) TARGET_BIN=$(KERNEL_BIN)
 
 bootloader: $(BOOTLOADER)
-$(BOOTLOADER):
+$(BOOTLOADER): FORCE
 	${MAKE} -C $(BOOT_SRC) TARGET_BIN=$(BOOTLOADER)
 
 clean:
@@ -42,3 +42,5 @@ qemu-bootloader: $(BOOTLOADER)
 
 uart:
 	$(MINICOM) -D $(SERIAL)
+
+FORCE:
