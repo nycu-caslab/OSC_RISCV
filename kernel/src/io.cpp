@@ -1,4 +1,5 @@
 #include "io.hpp"
+
 #include "uart.hpp"
 
 int putchar(int c) {
@@ -13,12 +14,12 @@ int getchar() {
   return c == '\r' ? '\n' : c;
 }
 
-void puts(const char *s) {
+void puts(const char* s) {
   while (*s != 0)
     putchar(*s++);
 }
 
-int readline(char *buffer, int length) {
+int readline(char* buffer, int length) {
   int r = 0;
   while (r < length) {
     char c = getchar();

@@ -1,6 +1,6 @@
 #define NOP asm volatile("ADDI x0, x0, 0")
 
-#define UART_BASE 0x10000000LL
+#define UART_BASE       0x10000000LL
 #define UART_THR_OFFSET 0
 #define UART_RBR_OFFSET 0
 #define UART_LSR_OFFSET 5
@@ -10,25 +10,25 @@
 
 unsigned int UART_GET(int offset) {
   switch (UART_UNIT_SIZE) {
-  case 1:
-    return *(unsigned char *)(UART_BASE + offset * UART_UNIT_SIZE);
-  case 4:
-    return *(unsigned int *)(UART_BASE + offset * UART_UNIT_SIZE);
-  default:
-    __builtin_unreachable();
+    case 1:
+      return *(unsigned char*)(UART_BASE + offset * UART_UNIT_SIZE);
+    case 4:
+      return *(unsigned int*)(UART_BASE + offset * UART_UNIT_SIZE);
+    default:
+      __builtin_unreachable();
   }
 }
 
 void UART_SET(int offset, unsigned int value) {
   switch (UART_UNIT_SIZE) {
-  case 1:
-    *(unsigned char *)(UART_BASE + offset * UART_UNIT_SIZE) = value;
-    return;
-  case 4:
-    *(unsigned int *)(UART_BASE + offset * UART_UNIT_SIZE) = value;
-    return;
-  default:
-    __builtin_unreachable();
+    case 1:
+      *(unsigned char*)(UART_BASE + offset * UART_UNIT_SIZE) = value;
+      return;
+    case 4:
+      *(unsigned int*)(UART_BASE + offset * UART_UNIT_SIZE) = value;
+      return;
+    default:
+      __builtin_unreachable();
   }
 }
 
@@ -51,14 +51,16 @@ int putchar(int c) {
   return 1;
 }
 
-char getchar_raw() { return uart_read(); }
+char getchar_raw() {
+  return uart_read();
+}
 
 int getchar() {
   char c = getchar_raw();
   return c == '\r' ? '\n' : c;
 }
 
-void puts(const char *s) {
+void puts(const char* s) {
   while (*s != 0)
     putchar(*s++);
 }
@@ -66,17 +68,17 @@ void puts(const char *s) {
 // ref:
 // https://github.com/starfive-tech/opensbi/blob/VF2_6.1_v3.8.2/lib/utils/gpio/fdt_gpio_starfive.c#L55-L74
 
-#define STARFIVE_GPIO_OUTVAL 0x40
-#define STARFIVE_GPIO_MASK 0xff
+#define STARFIVE_GPIO_OUTVAL         0x40
+#define STARFIVE_GPIO_MASK           0xff
 #define STARFIVE_GPIO_REG_SHIFT_MASK 0x3
-#define STARFIVE_GPIO_SHIFT_BITS 0x3
+#define STARFIVE_GPIO_SHIFT_BITS     0x3
 
 typedef unsigned int u32;
 
-static inline void writel(u32 val, volatile void *addr) {
+static inline void writel(u32 val, volatile void* addr) {
   asm volatile("sw %0, 0(%1)" : : "r"(val), "r"(addr));
 }
-static inline u32 readl(const volatile void *addr) {
+static inline u32 readl(const volatile void* addr) {
   u32 val;
   asm volatile("lw %0, 0(%1)" : "=r"(val) : "r"(addr));
   return val;
@@ -90,10 +92,10 @@ void starfive_gpio_set(long addr, long offset, int value) {
                    << STARFIVE_GPIO_SHIFT_BITS;
   u32 bit_mask = STARFIVE_GPIO_MASK << shift_bits;
   /* set output value */
-  u32 val = readl((void *)(reg_addr + STARFIVE_GPIO_OUTVAL));
+  u32 val = readl((void*)(reg_addr + STARFIVE_GPIO_OUTVAL));
   val &= ~bit_mask;
   val |= value << shift_bits;
-  writel(val, (void *)(reg_addr + STARFIVE_GPIO_OUTVAL));
+  writel(val, (void*)(reg_addr + STARFIVE_GPIO_OUTVAL));
 }
 
 void reset() {
@@ -116,9 +118,9 @@ char i2h(int x) {
   return '?';
 }
 
-void *memcpy(void *dst, const void *src, long n) {
-  char *d = (char *)dst;
-  const char *s = (const char *)src;
+void* memcpy(void* dst, const void* src, long n) {
+  char* d = (char*)dst;
+  const char* s = (const char*)src;
   for (long i = 0; i < n; i++) {
     *d = *s;
     if (*d != *s) {
@@ -141,16 +143,16 @@ void print_hex(long value) {
     putchar(i2h(value / x % 16));
 }
 
-void read(void *p, long size) {
-  char *s = p;
+void read(void* p, long size) {
+  char* s = p;
   for (long i = 0; i < size; i++) {
     char c = getchar_raw();
     s[i] = c;
   }
 }
 
-void hexdump(const void *buf, unsigned size, const char *msg) {
-  const char *s = (const char *)buf;
+void hexdump(const void* buf, unsigned size, const char* msg) {
+  const char* s = (const char*)buf;
   puts(msg ? msg : __func__);
   puts(": ");
   print_hex(size);
@@ -186,7 +188,7 @@ void hexdump(const void *buf, unsigned size, const char *msg) {
 long kernel_address = 0x80200000;
 int size = 0;
 
-void bootloader_main(int bootcore, void *dtb) {
+void bootloader_main(int bootcore, void* dtb) {
   puts("Hello Bootloader!\n");
 
   print_hex((long)&bootloader_main);
@@ -200,51 +202,51 @@ void bootloader_main(int bootcore, void *dtb) {
   for (;;) {
     puts("$ ");
     switch (getchar()) {
-    case 'a':
-      read(&kernel_address, sizeof(kernel_address));
-      break;
-    case 'p':
-      puts("size = ");
-      print_hex(size);
-      putchar('\n');
+      case 'a':
+        read(&kernel_address, sizeof(kernel_address));
+        break;
+      case 'p':
+        puts("size = ");
+        print_hex(size);
+        putchar('\n');
 
-      puts("kernel_address = ");
-      print_hex(kernel_address);
-      putchar('\n');
-      break;
-    case 's':
-      read(&size, sizeof(size));
+        puts("kernel_address = ");
+        print_hex(kernel_address);
+        putchar('\n');
+        break;
+      case 's':
+        read(&size, sizeof(size));
 
-      puts("size = ");
-      print_hex(size);
-      putchar('\n');
+        puts("size = ");
+        print_hex(size);
+        putchar('\n');
 
-      puts("kernel_address = ");
-      print_hex(kernel_address);
-      putchar('\n');
+        puts("kernel_address = ");
+        print_hex(kernel_address);
+        putchar('\n');
 
-      puts("start read\n");
-      read((void *)kernel_address, size);
-      puts("end read\n");
+        puts("start read\n");
+        read((void*)kernel_address, size);
+        puts("end read\n");
 
-      break;
-    case 'd':
-      hexdump((void *)kernel_address, size, 0);
-      break;
-    case 'j':
-      asm volatile("fence.i\t\n");
-      ((typeof(&bootloader_main))(kernel_address))(bootcore, dtb);
-      break;
-    case 'r':
-      reset();
-      break;
-    default:
-      puts("a\t: set kernel address\n");
-      puts("p\t: print kernel address\n");
-      puts("s\t: send kernel\n");
-      puts("d\t: dump kernel\n");
-      puts("j\t: jump to kernel\n");
-      puts("r\t: reboot the device\n");
+        break;
+      case 'd':
+        hexdump((void*)kernel_address, size, 0);
+        break;
+      case 'j':
+        asm volatile("fence.i\t\n");
+        ((typeof(&bootloader_main))(kernel_address))(bootcore, dtb);
+        break;
+      case 'r':
+        reset();
+        break;
+      default:
+        puts("a\t: set kernel address\n");
+        puts("p\t: print kernel address\n");
+        puts("s\t: send kernel\n");
+        puts("d\t: dump kernel\n");
+        puts("j\t: jump to kernel\n");
+        puts("r\t: reboot the device\n");
     }
   }
 }

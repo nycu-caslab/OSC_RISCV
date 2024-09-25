@@ -1,4 +1,5 @@
 #include "main.hpp"
+
 #include "io.hpp"
 #include "reset.hpp"
 #include "uart.hpp"
@@ -16,21 +17,21 @@ void kernel_main() {
     if (len <= 0)
       continue;
     switch (buf[0]) {
-    case 'h':
-      switch (buf[3]) {
-      case 'p':
-        puts("help\t: print this help menu\n");
-        puts("hello\t: print Hello World!\n");
-        puts("reboot\t: reboot the device\n");
+      case 'h':
+        switch (buf[3]) {
+          case 'p':
+            puts("help\t: print this help menu\n");
+            puts("hello\t: print Hello World!\n");
+            puts("reboot\t: reboot the device\n");
+            break;
+          case 'l':
+            puts("Hello World!\n");
+            break;
+        }
         break;
-      case 'l':
-        puts("Hello World!\n");
+      case 'r':
+        reset();
         break;
-      }
-      break;
-    case 'r':
-      reset();
-      break;
     }
   }
 }

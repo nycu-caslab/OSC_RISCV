@@ -1,29 +1,30 @@
 #include "uart.hpp"
+
 #include "util.hpp"
 
 int UART_UNIT_SIZE = 1;
 
 unsigned int UART_GET(int offset) {
   switch (UART_UNIT_SIZE) {
-  case 1:
-    return *(unsigned char *)(UART_BASE + offset * UART_UNIT_SIZE);
-  case 4:
-    return *(unsigned int *)(UART_BASE + offset * UART_UNIT_SIZE);
-  default:
-    __builtin_unreachable();
+    case 1:
+      return *(unsigned char*)(UART_BASE + offset * UART_UNIT_SIZE);
+    case 4:
+      return *(unsigned int*)(UART_BASE + offset * UART_UNIT_SIZE);
+    default:
+      __builtin_unreachable();
   }
 }
 
 void UART_SET(int offset, unsigned int value) {
   switch (UART_UNIT_SIZE) {
-  case 1:
-    *(unsigned char *)(UART_BASE + offset * UART_UNIT_SIZE) = value;
-    return;
-  case 4:
-    *(unsigned int *)(UART_BASE + offset * UART_UNIT_SIZE) = value;
-    return;
-  default:
-    __builtin_unreachable();
+    case 1:
+      *(unsigned char*)(UART_BASE + offset * UART_UNIT_SIZE) = value;
+      return;
+    case 4:
+      *(unsigned int*)(UART_BASE + offset * UART_UNIT_SIZE) = value;
+      return;
+    default:
+      __builtin_unreachable();
   }
 }
 
