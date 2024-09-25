@@ -117,3 +117,9 @@ long strtol(const char* s, const char** endptr, size_t base, size_t n) {
 bool isprint(char c) {
   return 0x20 <= c and c <= 0x7e;
 }
+
+bool operator==(string_view a, string_view b) {
+  if (a.size() != b.size())
+    return false;
+  return !memcmp(a.data(), b.data(), a.size());
+}

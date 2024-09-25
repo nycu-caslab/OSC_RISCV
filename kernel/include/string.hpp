@@ -61,3 +61,5 @@ class string_view {
     return true;
   }
 };
+
+bool operator==(string_view a, string_view b);
