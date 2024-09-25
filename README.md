@@ -1,9 +1,7 @@
-# OSC RISCV Source Code
-- lab 0 boot board, load kernel image
-- lab 1 register & assembly, mailbox
-- lab 2
-- lab 3
-- lab 4
-- lab 5
-- lab 6
-- lab 7
+# OSC RISCV
+
+## Requirements
+
+- compiler: `clang++` `v18.1.5`
+- emulator: `qemu-system-riscv64` `v8.2.1`
+- debugger: `lldb` `v18.1.5`
