@@ -3,12 +3,13 @@ LD 			:= ld.lld$(LLVM_SUFFIX)
 OBJCOPY 	:= llvm-objcopy$(LLVM_SUFFIX)
 
 CXXFLAGS 	:= 
-CXXFLAGS 	+= -march=rv64gc
+# CXXFLAGS 	+= -march=rv64gc
 CXXFLAGS 	+= --target=riscv64-unknown-none-elf
 CXXFLAGS 	+= -mcmodel=medany
 CXXFLAGS 	+= -nostdlib
-CXXFLAGS 	+= -Wall
-CXXFLAGS 	+= -Wextra
+CXXFLAGS   	+= -std=c++20
+CXXFLAGS 	+= -D_LIBCPP_HAS_NO_THREADS -D_LIBCPP_DISABLE_AVAILABILITY -D_LIBCPP_CSTDLIB
+CXXFLAGS 	+= -Wall -Wextra
 CXXFLAGS 	+= -fno-exceptions -fno-c++-static-destructors -fno-rtti
 
 LDFLAGS :=
