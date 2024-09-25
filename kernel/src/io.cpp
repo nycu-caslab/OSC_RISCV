@@ -34,6 +34,22 @@ int kreadline(char* buffer, int length) {
   return r;
 }
 
+void kprint_hex(string_view view) {
+  for (auto c : view)
+    kprintf("%02x", c);
+}
+void kprint_str(string_view view) {
+  for (auto c : view)
+    kputchar(c);
+}
+
+void kprint_str_or_hex(string_view view) {
+  if (view.printable())
+    kprint_str(view);
+  else
+    kprint_hex(view);
+}
+
 void k_npf_putc(int c, void* /* ctx */) {
   kputchar(c);
 }

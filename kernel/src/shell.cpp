@@ -1,5 +1,6 @@
 #include "shell.hpp"
 
+#include "fdt.hpp"
 #include "io.hpp"
 #include "reset.hpp"
 
@@ -19,6 +20,7 @@ void shell() {
             kputs("help\t: print this help menu\n");
             kputs("hello\t: print Hello World!\n");
             kputs("reboot\t: reboot the device\n");
+            kputs("fdt\t: print device tree\n");
             break;
           case 'l':
             kputs("Hello World!\n");
@@ -27,6 +29,9 @@ void shell() {
         break;
       case 'r':
         reset();
+        break;
+      case 'f':
+        fdt.print();
         break;
     }
   }
