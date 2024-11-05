@@ -3,7 +3,7 @@
 #include "fdt.hpp"
 #include "initramfs.hpp"
 #include "io.hpp"
-#include "shell.hpp"
+#include "shell/shell.hpp"
 #include "uart.hpp"
 
 void kernel_main(int hartid, void* dtb_addr) {
