@@ -14,14 +14,20 @@ SECTIONS
         *(.rodata .rodata.* .gnu.linkonce.r*)
     }
 
+    . = ALIGN(0x1000);
+
     .data : {
         *(.data .data.* .gnu.linkonce.d*)
     }
 
+    PROVIDE(__bss_start = .);
     .bss : {
         *(.bss .bss.*)
         *(COMMON)
     }
+    PROVIDE(__bss_end = .);
+
+    . = ALIGN(0x1000);
 
     _end = .;
 
