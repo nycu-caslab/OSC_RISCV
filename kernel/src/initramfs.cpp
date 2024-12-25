@@ -12,7 +12,8 @@ void initramfs_init() {
       kprintf("initramfs: device %s not found\n", path);
       return (char*)0;
     }
-    auto addr = (char*)(uint64_t)fdt_ld32(view.data());
+    auto addr = (char*)fdt_ld64(view.data());
+    kprintf("initramfs: %s = %p\n", path, addr);
     return addr;
   };
   auto start = find32("/chosen/linux,initrd-start");
