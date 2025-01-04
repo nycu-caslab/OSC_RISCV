@@ -22,15 +22,40 @@ void kputs(const char* s) {
 
 int kreadline(char* buffer, int length) {
   int r = 0;
-  while (r < length) {
+  while (true) {
     char c = kgetchar();
-    kputchar(c);
-    if (c == '\n') {
-      buffer[r++] = 0;
-      break;
+    switch (c) {
+      case 8:     // ^H
+      case 0x7f:  // backspace
+        if (r > 0) {
+          buffer[r--] = 0;
+          kputchar('\b');
+          kputchar(' ');
+          kputchar('\b');
+        }
+        break;
+      case 0x15:  // ^U
+        while (r > 0) {
+          buffer[r--] = 0;
+          kputchar('\b');
+          kputchar(' ');
+          kputchar('\b');
+        }
+        break;
+      case '\n':
+        kputchar('\n');
+        buffer[r] = '\0';
+        goto end;
+      case '\t':  // skip \t
+        break;
+      default:
+        if (r + 1 < length) {
+          buffer[r++] = c;
+          kputchar(c);
+        }
     }
-    buffer[r++] = c;
   }
+end:
   return r;
 }
 
