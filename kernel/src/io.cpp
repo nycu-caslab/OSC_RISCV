@@ -43,7 +43,7 @@ void kprint_str(string_view view) {
     kputchar(c);
 }
 
-void kprint_str_or_hex(string_view view) {
+void kprint(string_view view) {
   if (view.printable())
     kprint_str(view);
   else

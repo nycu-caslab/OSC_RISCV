@@ -12,6 +12,7 @@
 
 using u32 = unsigned int;
 using u64 = unsigned long long;
+using size_t = unsigned long;
 using addr_t = volatile char*;
 
 static inline void writel(u32 val, volatile void* addr) {

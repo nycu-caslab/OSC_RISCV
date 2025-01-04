@@ -10,7 +10,6 @@ void kputs(const char* s);
 int kreadline(char* buffer, int length);
 void kprint_hex(string_view view);
 void kprint_str(string_view view);
-void kprint_str_or_hex(string_view view);
 void kprint(string_view view);
 
 int PRINTF_FORMAT(1, 0) kvprintf(const char* format, va_list args);
