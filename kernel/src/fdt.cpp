@@ -5,22 +5,67 @@
 
 FDT fdt;
 
+void fdt_print_prop(const char* prop_name, const char* prop_value, uint32_t len,
+                    bool endl) {
+  kprintf("%s", prop_name);
+
+  if (len > 0) {
+    kprintf(" = ");
+
+    bool string_printable = true;
+    uint32_t cnt = 0;
+
+    for (uint32_t off = 0; off < len; off++, cnt++) {
+      string_view view{prop_value + off};
+      if (!view.printable()) {
+        string_printable = false;
+        break;
+      }
+      off += view.size();
+    }
+
+    if (string_printable and cnt * 2 <= len) {
+      for (uint32_t off = 0; off < len; off++) {
+        if (off)
+          kprintf(", ");
+        kprintf("\"");
+        off += kprintf("%s", prop_value + off);
+        kprintf("\"");
+      }
+    } else if (len % sizeof(uint32_t) == 0) {
+      kprintf("<");
+      for (uint32_t off = 0; off < len; off += sizeof(uint32_t)) {
+        if (off)
+          kprintf(" ");
+        kprintf("0x%08x", fdt_ld32(prop_value + off));
+      }
+      kprintf(">");
+    } else {
+      kprint_hex({prop_value, len});
+    }
+  }
+
+  if (endl)
+    kprintf(";\n");
+  else
+    kprintf(";");
+}
+
 bool print_fdt(uint32_t tag, int level, const char* node_name,
                const char* prop_name, uint32_t len, const char prop_value[]) {
   for (int i = 0; i < level; i++)
     kputchar('\t');
   switch (tag) {
     case FDT_BEGIN_NODE: {
-      kprintf("begin %s", node_name);
+      kprintf("%s {", node_name);
       break;
     }
     case FDT_END_NODE: {
-      kprintf("end %s", node_name);
+      kprintf("};");
       break;
     }
     case FDT_PROP: {
-      kprintf("%s: ", prop_name);
-      kprint({prop_value, (int)len});
+      fdt_print_prop(prop_name, prop_value, len, false);
       break;
     }
     default: {
@@ -218,17 +263,16 @@ pair<bool, string_view> FDT::find(const char* path, fp list_fp, int depth,
   found = false;
   if (path[0] == '/')
     traverse(find_path);
+  fdt_find::path = nullptr;
+  fdt_find::list_fp = nullptr;
   return {found, view};
 }
 
 bool FDT::print(const char* path, int depth) {
   auto [found, view] = fdt.find(path, print_fdt, depth);
-  if (not found) {
-    return -1;
-  } else if (view.data()) {
-    kprintf("%s: ", path);
-    kprint(view);
-    kprintf("\n");
-  }
-  return 0;
+  if (not found)
+    return false;
+  if (view.data())
+    fdt_print_prop(path, view.data(), view.size());
+  return true;
 }

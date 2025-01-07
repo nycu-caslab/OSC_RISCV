@@ -98,6 +98,8 @@ constexpr uint32_t FDT_PROP = 0x00000003;
 constexpr uint32_t FDT_NOP = 0x00000004;
 constexpr uint32_t FDT_END = 0x00000009;
 
+void fdt_print_prop(const char* prop_name, const char* prop_value, uint32_t len,
+                    bool endl = true);
 bool print_fdt(uint32_t tag, int level, const char* node_name,
                const char* prop_name, uint32_t len, const char prop_value[]);
 
