@@ -118,10 +118,10 @@ char i2h(int x) {
   return '?';
 }
 
-void* memcpy(void* dst, const void* src, long n) {
+void* memcpy(void* dst, const void* src, unsigned long n) {
   char* d = (char*)dst;
   const char* s = (const char*)src;
-  for (long i = 0; i < n; i++) {
+  for (unsigned long i = 0; i < n; i++) {
     *d = *s;
     if (*d != *s) {
       puts("memcpy fail !!???\n");
@@ -195,9 +195,6 @@ void bootloader_main(int bootcore, void* dtb) {
   puts("\n");
 
   kernel_address = 0x80200000;
-
-#define BUF_SIZE 1024
-  char buf[BUF_SIZE];
 
   for (;;) {
     puts("$ ");
