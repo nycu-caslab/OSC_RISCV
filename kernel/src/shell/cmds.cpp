@@ -36,5 +36,15 @@ const Cmd cmds[] = {
         .help = "memory allocation",
         .fp = cmd_mm,
     },
+    {
+        .name = "screen_color",
+        .help = "write color to frame buffer",
+        .fp = cmd_screen_color,
+    },
+    {
+        .name = "screen_cat",
+        .help = "write file to frame buffer",
+        .fp = cmd_screen_cat,
+    },
 };
 const int ncmd = sizeof(cmds) / sizeof(cmds[0]);
