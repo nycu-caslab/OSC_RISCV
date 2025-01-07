@@ -27,8 +27,23 @@ void kernel_main(int hartid, void* dtb_addr) {
   mm_reserve(initramfs.startp(), initramfs.endp());
   // flatten device tree
   mm_reserve(fdt.startp(), fdt.endp());
+  // fdt /reserved-memory
+  fdt.print("/reserved-memory");
+  fdt.find(
+      "/reserved-memory",
+      +[](uint32_t tag, int level, const char* node_name, const char* prop_name,
+          uint32_t len, const char prop_value[]) -> bool {
+        if (tag == FDT_PROP and !strcmp(prop_name, "reg") and
+            len == sizeof(uint64_t) * 2) {
+          auto addr = fdt_ld64(prop_value);
+          auto size = fdt_ld64(prop_value + sizeof(uint64_t));
+          kprintf("/reserved-memory/%s: %p (%x)\n", node_name, addr, size);
+          mm_reserve(addr, addr + size);
+        }
+        return false;
+      });
 
-  // mm_init();
+  mm_init();
 
   shell();
 }

@@ -80,19 +80,18 @@ void PageSystem::reserve(void* p_start, void* p_end) {
 }
 
 void PageSystem::init() {
-  // log = false;
+  log = false;
   for (uint64_t i = 0; i < length_; i++) {
     if (array_[i].allocated())
       release(pfn2addr(i));
   }
-  // log = true;
+  log = true;
 #if MM_LOG_LEVEL >= 3
   info();
 #endif
 }
 
 void PageSystem::release(PageSystem::AllocatedPage apage) {
-  kprintf("release %p\n", apage);
   auto pfn = addr2pfn(apage);
   auto order = array_[pfn].order;
   if (log)

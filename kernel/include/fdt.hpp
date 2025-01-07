@@ -125,6 +125,8 @@ class FDT {
   void traverse(fp callback);
   pair<bool, string_view> find(const char* path, fp list_fp = nullptr,
                                int depth = 0, bool debug = false);
+  bool print(const char* path, int depth = 0);
+
   uint32_t size() const {
     return fdt_totalsize(base);
   }

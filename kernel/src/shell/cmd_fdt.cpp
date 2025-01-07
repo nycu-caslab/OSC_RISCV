@@ -12,14 +12,10 @@ int cmd_fdt(int argc, char* argv[]) {
   int depth = argc >= 3 ? strtol(argv[2]) : 0;
 
   int r = 0;
-  auto [found, view] = fdt.find(path, print_fdt, depth);
+  auto found = fdt.print(path, depth);
   if (not found) {
     r = -1;
     kprintf("%s: %s: No such device\n", argv[0], path);
-  } else if (view.data()) {
-    kprintf("%s: ", path);
-    kprint(view);
-    kprintf("\n");
   }
   return r;
 }

@@ -220,3 +220,15 @@ pair<bool, string_view> FDT::find(const char* path, fp list_fp, int depth,
     traverse(find_path);
   return {found, view};
 }
+
+bool FDT::print(const char* path, int depth) {
+  auto [found, view] = fdt.find(path, print_fdt, depth);
+  if (not found) {
+    return -1;
+  } else if (view.data()) {
+    kprintf("%s: ", path);
+    kprint(view);
+    kprintf("\n");
+  }
+  return 0;
+}
