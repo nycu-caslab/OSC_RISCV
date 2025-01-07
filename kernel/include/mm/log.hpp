@@ -1,6 +1,6 @@
 #pragma once
 
-#define MM_LOG_LEVEL 3
+#define MM_LOG_LEVEL 1
 #include "io.hpp"
 
 #if MM_LOG_LEVEL >= 3

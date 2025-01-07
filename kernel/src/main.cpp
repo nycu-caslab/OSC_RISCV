@@ -6,6 +6,7 @@
 #include "mm/mm.hpp"
 #include "shell/shell.hpp"
 #include "uart.hpp"
+#include "video.hpp"
 
 void kernel_main(int hartid, void* dtb_addr) {
   uart_init();
@@ -37,11 +38,13 @@ void kernel_main(int hartid, void* dtb_addr) {
             len == sizeof(uint64_t) * 2) {
           auto addr = fdt_ld64(prop_value);
           auto size = fdt_ld64(prop_value + sizeof(uint64_t));
-          kprintf("/reserved-memory/%s: %p (%x)\n", node_name, addr, size);
-          mm_reserve(addr, addr + size);
+          kprintf("/reserved-memory/%s: %lx (%lx)\n", node_name, addr, size);
+          mm_reserve_size(addr, size);
         }
         return false;
       });
+  // frame buffer
+  mm_reserve_size(video::fb, video::fb_size);
 
   mm_init();
 

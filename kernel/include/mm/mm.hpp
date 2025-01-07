@@ -16,6 +16,10 @@ template <typename T, typename U>
 void mm_reserve(T start, U end) {
   mm_reserve_p((void*)(uint64_t)start, (void*)(uint64_t)end);
 }
+template <typename T>
+void mm_reserve_size(T start, uint64_t size) {
+  mm_reserve_p((void*)(uint64_t)start, (void*)((uint64_t)start + size));
+}
 
 void mm_preinit();
 void mm_init();

@@ -1,6 +1,9 @@
 #include "initramfs.hpp"
 #include "io.hpp"
 #include "shell/cmd.hpp"
+#include "video.hpp"
+
+using namespace video;
 
 int cmd_screen_cat(int argc, char* argv[]) {
   if (argc < 2) {
@@ -31,10 +34,6 @@ int cmd_screen_cat(int argc, char* argv[]) {
       width++;
     size_t height = size / width;
     kprintf("size = %u = %ux%u\n", size, width, height);
-
-    auto fb = (volatile uint32_t*)0x00000000fe000000;
-    size_t xsize = 1920;
-    size_t ysize = 1080;
 
     size_t xbeg = (xsize - width * xscale) / 2;
     size_t ybeg = (ysize - height * yscale) / 2;
