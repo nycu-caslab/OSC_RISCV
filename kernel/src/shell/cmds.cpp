@@ -46,5 +46,10 @@ const Cmd cmds[] = {
         .help = "write file to frame buffer",
         .fp = cmd_screen_cat,
     },
+    {
+        .name = "screen_img",
+        .help = "write img to frame buffer",
+        .fp = cmd_screen_img,
+    },
 };
 const int ncmd = sizeof(cmds) / sizeof(cmds[0]);

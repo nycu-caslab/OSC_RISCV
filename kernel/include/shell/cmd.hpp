@@ -11,6 +11,7 @@ int cmd_cat(int, char*[]);
 int cmd_mm(int, char*[]);
 int cmd_screen_color(int, char*[]);
 int cmd_screen_cat(int, char*[]);
+int cmd_screen_img(int, char*[]);
 
 using cmd_fp = int (*)(int, char*[]);
 
