@@ -90,3 +90,11 @@ int kprintf(const char* format, ...) {
   va_end(args);
   return size;
 }
+
+void klog(const char* format, ...) {
+  va_list args;
+  va_start(args, format);
+  // kprintf("[" PRTval "] ", FTval(get_current_time()));
+  kvprintf(format, args);
+  va_end(args);
+}

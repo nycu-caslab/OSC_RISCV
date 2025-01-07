@@ -1,5 +1,6 @@
-__kernel    = 0x80200000;
-__stack_sz  = 0x2000;
+__kernel        = 0x80200000;
+__heap_sz       = 0x201000;
+__stack_sz      = 0x2000;
 
 SECTIONS
 {
@@ -35,6 +36,11 @@ SECTIONS
         *(.comment)
         *(.gnu*) *(.note*) *(.eh_frame*)
     }
+
+    . = ALIGN(0x1000);
+    PROVIDE(__heap_start = .);
+    . += __heap_sz;
+    PROVIDE(__heap_end = .);
 
     . = ALIGN(0x1000);
     PROVIDE(__stack_beg = .);

@@ -8,8 +8,13 @@
 #define PRINTF_FORMAT(format_param, dots_param)
 #endif
 
+#ifndef MASK
+#define MASK(bits) ((1ULL << bits) - 1)
+#endif
 #define NOP asm volatile("ADDI x0, x0, 0")
 
+#include <stdint.h>
+using uint8_t = unsigned char;
 using u32 = unsigned int;
 using u64 = unsigned long long;
 using size_t = unsigned long;

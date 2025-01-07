@@ -1,3 +1,8 @@
 #pragma once
 
-extern "C" void kernel_main(int hartid, void* fdt);
+extern "C" {
+extern char __stack_end[];
+
+void _start();
+void kernel_main(int hartid, void* fdt);
+}

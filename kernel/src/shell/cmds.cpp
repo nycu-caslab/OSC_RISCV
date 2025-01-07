@@ -31,5 +31,10 @@ const Cmd cmds[] = {
         .help = "concatenate and print files",
         .fp = cmd_cat,
     },
+    {
+        .name = "mm",
+        .help = "memory allocation",
+        .fp = cmd_mm,
+    },
 };
 const int ncmd = sizeof(cmds) / sizeof(cmds[0]);
