@@ -1,0 +1,4 @@
+b kernel_main
+gdb-remote 1234
+c
+c

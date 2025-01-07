@@ -31,3 +31,4 @@ $(FIT_FILE): $(ITS_FILE) $(BOOTLOADER) $(DTB_FILE)
 
 upload: $(UBOOT_CONF) $(FIT_FILE)
 	cp $? "$(DISKPATH)"
+	diskutil eject "$(DISKPATH)"

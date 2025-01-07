@@ -11,6 +11,7 @@ CXXFLAGS   	+= -std=c++20
 CXXFLAGS 	+= -D_LIBCPP_HAS_NO_THREADS -D_LIBCPP_DISABLE_AVAILABILITY -D_LIBCPP_CSTDLIB
 CXXFLAGS 	+= -Wall -Wextra
 CXXFLAGS 	+= -fno-exceptions -fno-c++-static-destructors -fno-rtti
+CXXFLAGS 	+= -g
 
 LDFLAGS :=
 LDFLAGS += --Bstatic

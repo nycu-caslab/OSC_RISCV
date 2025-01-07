@@ -31,6 +31,7 @@ void UART_SET(int offset, unsigned int value) {
 void uart_init() {
   // FIXME
   const int cnt = 10;
+  UART_UNIT_SIZE = 1;
   for (int i = 0; i <= cnt; i++) {
     if ((UART_GET(UART_LSR_OFFSET) & ((1 << 5) | (1 << 6))) != 0)
       break;

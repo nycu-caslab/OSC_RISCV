@@ -10,7 +10,6 @@ CFLAGS 	+= -nostdlib
 CFLAGS 	+= -Wall
 CFLAGS 	+= -Wextra
 CFLAGS 	+= -g
-CFLAGS  += -mno-unaligned-access
 
 LDFLAGS :=
 LDFLAGS += --Bstatic
