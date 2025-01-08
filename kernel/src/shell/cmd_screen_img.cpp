@@ -5,17 +5,6 @@
 
 using namespace video;
 
-/*  Call this macro repeatedly.  After each use, the pixel data can be extracted
- */
-
-#define HEADER_PIXEL(data, pixel)                                       \
-  {                                                                     \
-    pixel[0] = (((data[0] - 33) << 2) | ((data[1] - 33) >> 4));         \
-    pixel[1] = ((((data[1] - 33) & 0xF) << 4) | ((data[2] - 33) >> 2)); \
-    pixel[2] = ((((data[2] - 33) & 0x3) << 6) | ((data[3] - 33)));      \
-    data += 4;                                                          \
-  }
-
 int cmd_screen_img(int argc, char* argv[]) {
   if (argc < 2) {
     kprintf("%s: require file\n", argv[0]);
@@ -37,7 +26,7 @@ int cmd_screen_img(int argc, char* argv[]) {
 
   struct Img {
     uint32_t w, h, f;
-    char data[];
+    uint32_t data[];
   };
   auto s = (Img*)f->file().data();
 
@@ -55,16 +44,12 @@ int cmd_screen_img(int argc, char* argv[]) {
   }
   auto img_data = s->data;
 
-  char pixel[4];
-
   for (long t = 0; t < times; t++) {
     for (size_t frame_id = 0; frame_id < img_frames; frame_id++) {
-      char* data = img_data + frame_id * img_width * img_height * 4;
-
       for (size_t y = 0; y < img_height; y++) {
         for (size_t x = 0; x < img_width; x++) {
-          HEADER_PIXEL(data, pixel);
-          uint32_t color = (pixel[0] << 16 | pixel[1] << 8 | pixel[2]);
+          size_t idx = frame_id * img_width * img_height + y * img_width + x;
+          uint32_t color = img_data[idx];
           for (size_t dy = 0; dy < scale; dy++)
             for (size_t dx = 0; dx < scale; dx++)
               get(xbeg + x * scale + dx, ybeg + y * scale + dy) = color;
