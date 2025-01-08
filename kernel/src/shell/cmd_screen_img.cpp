@@ -19,12 +19,13 @@ using namespace video;
 int cmd_screen_img(int argc, char* argv[]) {
   if (argc < 2) {
     kprintf("%s: require file\n", argv[0]);
-    kprintf("usage: %s <file> [times]\n", argv[0]);
+    kprintf("usage: %s <file> [scale] [times]\n", argv[0]);
     return -1;
   }
 
   auto name = argv[1];
-  auto times = argc < 3 ? 1 : strtol(argv[2]);
+  size_t scale = argc < 3 ? 10 : strtol(argv[2]);
+  auto times = argc < 4 ? 1 : strtol(argv[3]);
   auto f = initramfs.find(name);
   if (f == nullptr) {
     kprintf("%s: %s: No such file or directory\n", argv[0], name);
@@ -44,7 +45,11 @@ int cmd_screen_img(int argc, char* argv[]) {
   auto img_height = s->h;
   auto img_frames = s->f;
   kprintf("%s size = %ux%ux%u\n", name, img_width, img_height, img_frames);
-  if (img_width > xsize or img_height > ysize) {
+
+  size_t xbeg = (xsize - img_width * scale) / 2;
+  size_t ybeg = (ysize - img_height * scale) / 2;
+
+  if (xbeg < 0 or ybeg < 0) {
     kprintf("%s: size exceed !!\n", argv[0]);
     return -1;
   }
@@ -56,18 +61,17 @@ int cmd_screen_img(int argc, char* argv[]) {
     for (size_t frame_id = 0; frame_id < img_frames; frame_id++) {
       char* data = img_data + frame_id * img_width * img_height * 4;
 
-      size_t xbeg = (xsize - img_width) / 2;
-      size_t ybeg = (ysize - img_height) / 2;
-
       for (size_t y = 0; y < img_height; y++) {
         for (size_t x = 0; x < img_width; x++) {
           HEADER_PIXEL(data, pixel);
           uint32_t color = (pixel[0] << 16 | pixel[1] << 8 | pixel[2]);
-          get(xbeg + x, ybeg + y) = color;
+          for (size_t dy = 0; dy < scale; dy++)
+            for (size_t dx = 0; dx < scale; dx++)
+              get(xbeg + x * scale + dx, ybeg + y * scale + dy) = color;
         }
       }
 
-      wait();
+      wait(1);
     }
   }
 

@@ -14,9 +14,9 @@ inline volatile uint32_t& get(uint32_t x, uint32_t y) {
   return fb[y * xsize + x];
 }
 
-inline int wait() {
+inline int wait(size_t times = 4) {
   int r = 0;
-  for (size_t i = 0; i < 4; i++)
+  for (size_t i = 0; i < times; i++)
     for (size_t y = 0; y < ysize; y++)
       for (size_t x = 0; x < xsize; x++)
         if (i % 2)
