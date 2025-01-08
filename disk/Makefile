@@ -9,6 +9,7 @@ KERNEL_IMG 	= kernel.img
 BOOTLOADER 	= bootloader.img
 ITS_FILE 	= visionfive2-fit-image.its
 FIT_FILE 	= kernel.fit
+RAMDISK 	= initramfs.cpio
 
 .PHONY: all files pack dtb fit upload
 
@@ -25,7 +26,7 @@ dtb: $(DEVICETREE)
 	tar --strip-components 1 -xjvf $< '*/$@'
 
 fit: $(FIT_FILE)
-$(FIT_FILE): $(ITS_FILE) $(BOOTLOADER) $(DTB_FILE)
+$(FIT_FILE): $(ITS_FILE) $(BOOTLOADER) $(DTB_FILE) $(RAMDISK)
 	mkimage -f $< -A riscv -O linux -T flat_dt $@
 
 
