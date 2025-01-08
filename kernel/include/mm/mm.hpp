@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+constexpr bool MM_CLEAR_ON_FREE = true;
 constexpr uint64_t PAGE_SIZE = 0x1000;
 
 inline bool isPageAlign(void* ptr) {

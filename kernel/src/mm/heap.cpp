@@ -72,6 +72,7 @@ struct Info {
     return list.pop_front();
   }
 
+  // TODO: release empty page
   void free(void* ptr) {
     auto chk = new (ptr) FreeChunk;
     list.push_front(chk);
@@ -126,6 +127,8 @@ void heap_free(void* ptr) {
 
   MM_DEBUG("free %p\n", ptr);
   auto hdr = (PageHeader*)getPage(ptr);
+  if constexpr (MM_CLEAR_ON_FREE)
+    memset(ptr, 0, hdr->size);
   info[hdr->idx].free(ptr);
 
   // restore_DAIF();

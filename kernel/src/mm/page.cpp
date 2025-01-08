@@ -82,8 +82,10 @@ void PageSystem::reserve(void* p_start, void* p_end) {
 void PageSystem::init() {
   log = false;
   for (uint64_t i = 0; i < length_; i++) {
-    if (array_[i].allocated())
-      release(pfn2addr(i));
+    if (array_[i].allocated()) {
+      auto page = pfn2addr(i);
+      release(page);
+    }
   }
   log = true;
 #if MM_LOG_LEVEL >= 3
@@ -96,6 +98,8 @@ void PageSystem::release(PageSystem::AllocatedPage apage) {
   auto order = array_[pfn].order;
   if (log)
     MM_VERBOSE("release: page %p order %d\n", apage, order);
+  if constexpr (MM_CLEAR_ON_FREE)
+    memset(apage, 0, PAGE_SIZE << order);
   auto fpage = pfn2freepage(pfn);
   free_list_[order].push_back(fpage);
   merge(fpage);
